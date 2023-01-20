@@ -1,6 +1,7 @@
 package jpabook.jpashop.domain.item;
 
 import jakarta.persistence.*;
+import jpabook.jpashop.dto.UpdateItemDTO;
 import jpabook.jpashop.exception.NotEnoughStockException;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,5 +43,11 @@ public abstract class Item {
         }
 
         this.stockQuantity = restStock;
+    }
+
+    public void changeItem(UpdateItemDTO itemDTO) {
+        this.name = itemDTO.getName();
+        this.price = itemDTO.getPrice();
+        this.stockQuantity = itemDTO.getStockQuantity();
     }
 }
