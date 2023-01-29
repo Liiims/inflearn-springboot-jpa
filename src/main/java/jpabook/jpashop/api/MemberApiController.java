@@ -35,7 +35,7 @@ public class MemberApiController {
     }
 
     /**
-     * 조회 v2: 응답 값으로 엔티티가 아닌 별도의 DTO 를 반환한다.
+     * 조회 v2 : 응답 값으로 엔티티가 아닌 별도의 DTO 를 반환한다.
      */
     @GetMapping("/api/v2/members")
     public Result<?> membersV2() {
