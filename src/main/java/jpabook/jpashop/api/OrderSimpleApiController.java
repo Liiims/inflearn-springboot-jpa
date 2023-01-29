@@ -53,6 +53,19 @@ public class OrderSimpleApiController {
                 .collect(toList());
     }
 
+    /**
+     * v3. 엔티티를 조회해서 DTO로 변환(fetch join 사용O) <br><br>
+     * - fetch join으로 쿼리 1번 호출
+     */
+    @GetMapping("/api/v3/simple-orders")
+    public List<SimpleOrderDTO> ordersV3() {
+        List<Order> orders = orderRepository.findAllWithMemberDelivery();
+
+        return orders.stream()
+                .map(SimpleOrderDTO::new)
+                .collect(toList());
+    }
+
     @Data
     static class SimpleOrderDTO {
         private Long orderId;
