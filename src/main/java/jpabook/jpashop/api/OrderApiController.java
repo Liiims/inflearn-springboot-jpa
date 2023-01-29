@@ -19,14 +19,26 @@ public class OrderApiController {
     private final OrderRepository orderRepository;
 
     /**
-     * v2. 엔티티를 DTO로 변환 <br><br>
+     * v2. 엔티티를 조회해서 DTO로 변환(fetch join 사용X) <br><br>
      *
-     * - 지연로딩으로 매우 많은 SQL 실행 <br>
+     * - 트랜잭션 안의 지연로딩으로 매우 많은 SQL 실행 <br>
      *  - order 1번, member N번, address N번, orderItem N번, item N번
      */
     @GetMapping("/api/v2/orders")
     public List<OrderDTO> ordersV2() {
         return orderRepository.findAllByString(new OrderSearch()).stream()
+                .map(OrderDTO::new)
+                .collect(toList());
+    }
+
+    /**
+     * v3. 엔티티를 조회해서 DTO로 변환(fetch join 사용O) <br><br>
+     *
+     * - 페이징 시에는 N 부분을 포기해야함(대신에 batch fetch size? 옵션 주면 N -> 1 쿼리로 변경 가능)
+     */
+    @GetMapping("/api/v3/orders")
+    public List<OrderDTO> ordersV3() {
+        return orderRepository.findAllWithItem().stream()
                 .map(OrderDTO::new)
                 .collect(toList());
     }
