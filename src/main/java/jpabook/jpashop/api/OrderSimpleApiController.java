@@ -1,13 +1,19 @@
 package jpabook.jpashop.api;
 
+import jpabook.jpashop.domain.member.Address;
 import jpabook.jpashop.domain.order.Order;
 import jpabook.jpashop.domain.order.OrderRepository;
 import jpabook.jpashop.domain.order.OrderSearch;
+import jpabook.jpashop.domain.order.OrderStatus;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * xToOne(ManyToOne, OneToOne) 관계 최적화 <br><br>
@@ -31,4 +37,36 @@ public class OrderSimpleApiController {
 //    public List<Order> ordersV1() {
 //        return orderRepository.findAllByString(new OrderSearch());
 //    }
+
+    /**
+     * v2. 엔티티를 조회해서 DTO 로 변환 (fetch join 사용X) <br><br>
+     * - 단점: 지연로딩으로 쿼리 N번 호출
+     */
+    @GetMapping("/api/v2/simple-orders")
+    public List<SimpleOrderDTO> ordersV2() {
+        // ORDER N개
+        // N + 1 문제 발생 -> 1 + N(회원) + N(배송)
+        List<Order> orders = orderRepository.findAllByString(new OrderSearch());
+
+        return orders.stream()
+                .map(SimpleOrderDTO::new)
+                .collect(toList());
+    }
+
+    @Data
+    static class SimpleOrderDTO {
+        private Long orderId;
+        private String name;
+        private LocalDateTime orderDate;
+        private OrderStatus orderStatus;
+        private Address address;
+
+        public SimpleOrderDTO(Order o) {
+            orderId = o.getId();
+            name = o.getMember().getName(); // LAZY 초기화
+            orderDate = o.getOrderDate();
+            orderStatus = o.getStatus();
+            address = o.getDelivery().getAddress(); // LAZY 초기화
+        }
+    }
 }
