@@ -2,6 +2,7 @@ package jpabook.jpashop.domain.order;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import jpabook.jpashop.dto.OrderSimpleQueryDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -68,5 +69,14 @@ public class OrderRepository {
                         " join fetch o.member" +
                         " join fetch o.delivery", Order.class
                 ).getResultList();
+    }
+
+    public List<OrderSimpleQueryDTO> findOrderDTOs() {
+        return em.createQuery(
+                "select new jpabook.jpashop.dto.OrderSimpleQueryDTO(o.id, m.name, o.orderDate, o.status, d.address)" +
+                        " from Order o" +
+                        " join o.member m" +
+                        " join o.delivery d", OrderSimpleQueryDTO.class
+        ).getResultList();
     }
 }
