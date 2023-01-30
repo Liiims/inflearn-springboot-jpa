@@ -73,6 +73,16 @@ public class OrderApiController {
         return orderQueryRepository.findOrderQueryDTOs();
     }
 
+    /**
+     * v5. JPA에서 DTO로 바로 조회, 컬렉션 1 조회 최적화 버전 (1+1Query) <br><br>
+     *
+     * - 페이징 가능
+     */
+    @GetMapping("/api/v5/orders")
+    public List<OrderQueryDTO> ordersV5() {
+        return orderQueryRepository.findAllByDTO_optimization();
+    }
+
     @Data
     static class OrderDTO {
         private Long orderId;
