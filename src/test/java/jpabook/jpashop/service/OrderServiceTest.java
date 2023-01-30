@@ -6,7 +6,7 @@ import jpabook.jpashop.domain.item.Book;
 import jpabook.jpashop.domain.member.Address;
 import jpabook.jpashop.domain.member.Member;
 import jpabook.jpashop.domain.order.Order;
-import jpabook.jpashop.domain.order.OrderRepository;
+import jpabook.jpashop.repository.order.OrderRepository;
 import jpabook.jpashop.domain.order.OrderStatus;
 import jpabook.jpashop.exception.NotEnoughStockException;
 import org.junit.jupiter.api.DisplayName;

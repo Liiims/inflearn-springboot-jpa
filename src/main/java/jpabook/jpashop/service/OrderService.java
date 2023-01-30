@@ -1,10 +1,11 @@
 package jpabook.jpashop.service;
 
 import jpabook.jpashop.domain.item.Item;
-import jpabook.jpashop.domain.item.ItemRepository;
+import jpabook.jpashop.repository.item.ItemRepository;
 import jpabook.jpashop.domain.member.Member;
-import jpabook.jpashop.domain.member.MemberRepository;
+import jpabook.jpashop.repository.member.MemberRepository;
 import jpabook.jpashop.domain.order.*;
+import jpabook.jpashop.repository.order.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

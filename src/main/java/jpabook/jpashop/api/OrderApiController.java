@@ -2,6 +2,7 @@ package jpabook.jpashop.api;
 
 import jpabook.jpashop.domain.member.Address;
 import jpabook.jpashop.domain.order.*;
+import jpabook.jpashop.repository.order.OrderRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

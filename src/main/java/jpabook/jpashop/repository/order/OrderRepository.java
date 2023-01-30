@@ -1,7 +1,9 @@
-package jpabook.jpashop.domain.order;
+package jpabook.jpashop.repository.order;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import jpabook.jpashop.domain.order.Order;
+import jpabook.jpashop.domain.order.OrderSearch;
 import jpabook.jpashop.dto.OrderSimpleQueryDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
