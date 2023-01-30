@@ -2,6 +2,8 @@ package jpabook.jpashop.api;
 
 import jpabook.jpashop.domain.member.Address;
 import jpabook.jpashop.domain.order.*;
+import jpabook.jpashop.repository.order.query.OrderQueryDTO;
+import jpabook.jpashop.repository.order.query.OrderQueryRepository;
 import jpabook.jpashop.repository.order.OrderRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import static java.util.stream.Collectors.toList;
 public class OrderApiController {
 
     private final OrderRepository orderRepository;
+    private final OrderQueryRepository orderQueryRepository;
 
     /**
      * v2. 엔티티를 조회해서 DTO로 변환(fetch join 사용X) <br><br>
@@ -58,6 +61,16 @@ public class OrderApiController {
         return orderRepository.findAllWithMemberDelivery(offset, limit).stream()
                 .map(OrderDTO::new)
                 .collect(toList());
+    }
+
+    /**
+     * v4. JPA에서 DTO로 바로 조회, 컬렉션 N 조회 (1+NQuery) <br><br>
+     *
+     * - 페이징 가능
+     */
+    @GetMapping("/api/v4/orders")
+    public List<OrderQueryDTO> ordersV4() {
+        return orderQueryRepository.findOrderQueryDTOs();
     }
 
     @Data
