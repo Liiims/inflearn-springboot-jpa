@@ -1,10 +1,15 @@
 package jpabook.jpashop.api;
 
 import jpabook.jpashop.domain.member.Address;
-import jpabook.jpashop.domain.order.*;
+import jpabook.jpashop.domain.order.Order;
+import jpabook.jpashop.domain.order.OrderItem;
+import jpabook.jpashop.domain.order.OrderSearch;
+import jpabook.jpashop.domain.order.OrderStatus;
+import jpabook.jpashop.repository.order.OrderRepository;
+import jpabook.jpashop.repository.order.query.OrderFlatDTO;
+import jpabook.jpashop.repository.order.query.OrderItemQueryDTO;
 import jpabook.jpashop.repository.order.query.OrderQueryDTO;
 import jpabook.jpashop.repository.order.query.OrderQueryRepository;
-import jpabook.jpashop.repository.order.OrderRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -81,6 +87,23 @@ public class OrderApiController {
     @GetMapping("/api/v5/orders")
     public List<OrderQueryDTO> ordersV5() {
         return orderQueryRepository.findAllByDTO_optimization();
+    }
+
+    /**
+     * v6. JPA에서 DTO로 바로 조회, 플랫 데이터(1Query) (1 Query) <br><br>
+     *
+     * - 페이징 불가능...
+     */
+    @GetMapping("/api/v6/orders")
+    public List<OrderQueryDTO> ordersV6() {
+        List<OrderFlatDTO> flats = orderQueryRepository.findAllByDTO_flat();
+
+        return flats.stream()
+                .collect(groupingBy(o -> new OrderQueryDTO(o.getOrderId(), o.getName(), o.getOrderDate(), o.getOrderStatus(), o.getAddress()),
+                        mapping(o -> new OrderItemQueryDTO(o.getOrderId(), o.getItemName(), o.getOrderPrice(), o.getCount()), toList())
+                )).entrySet().stream()
+                .map(e -> new OrderQueryDTO(e.getKey().getOrderId(), e.getKey().getName(), e.getKey().getOrderDate(), e.getKey().getOrderStatus(), e.getKey().getAddress(), e.getValue()))
+                .collect(toList());
     }
 
     @Data
